@@ -23,14 +23,14 @@ public class CerealCompiler {
         ParseTree tree = parser.program();
 
         ParseTreeWalker walker = new ParseTreeWalker();
-        ExtractCerealListener extractor = new ExtractCerealListener(parser);
+        ExtractCerealListener extractor = new ExtractCerealListener();
 
         walker.walk(extractor, tree);
     }
 
     private static String readInput(String path) {
         StringBuilder stringBuilder = new StringBuilder();
-        FileReader fr = null;
+        FileReader fr;
 
         try {
             fr = new FileReader(path);

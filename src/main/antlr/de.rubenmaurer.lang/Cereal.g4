@@ -1,76 +1,120 @@
 grammar Cereal;
 
+@lexer::members {
+    public static final int JAVA = 1;
+}
+
 /* === PARSER === */
 
-program : bowl
+program : brand? buy* bowl*
         ;
 
-bowl    : 'bowl' ID block?
+brand   : 'brand' BRAND
         ;
 
-method  : type? fixed? 'ingredient' ID '(' params? ')' block
+buy     : 'buy' BRAND
         ;
 
-expr    : ID '(' exprList* ')'
-        | expr '*' expr
-        | expr '[' expr ']'
-        | expr ('+' | '-') expr
-        | ID
-        | INTEGER
-        | '(' expr ')'
-        | STRING
+bowl    : visibility? 'bowl' ID block?
+        ;
+
+method  : visibility? 'ingredient' ID '(' params? ')' ('=>' type)? block
+        ;
+
+expr    : ID '(' exprList* ')'          # MethodCall
+        | 'add' ID '(' exprList* ')'    # CreateNewObj
+        | expr '*' expr                 # Multi
+        | expr '[' expr ']'             # ArrayAccess
+        | expr ('+' | '-') expr         # AddSub
+        | ID                            # id
+        | INTEGER                       # int
+        | '(' expr ')'                  # parens
+        | '(' exprList* ')'             # curlList
+        | STRING                        # string
+        | '<<' expr                     # allocValue
         ;
 
 exprList: expr (',' expr)*
         ;
 
-varDec  : type ID ('<' expr)? ';'
+varDec  : type ID (expr)?
         ;
 
-block   : '{' stat* '}'
+block   : '{' (stat | method)* '}'
         ;
 
-stat    : block
-        | varDec
-        | expr '<' expr
-        | expr ';'
-        | method
-        | 'return' expr ';'
+imp     : 'important' block
         ;
+
+pre     : 'pre' block
+        ;
+
+post    : 'post' block
+        ;
+
+stat    :
+        ( varDec
+        | expr
+        | ret
+        ) ';'
+        | imp
+        | pre
+        | post
+        | block
+        ;
+
+ret  : 'return' expr?
+     ;
 
 params  : param (',' param)*
         ;
 
-param   : ID ':' type ('[]')*
+param   : ID ':' type
         ;
 
-type    : '_' ('string' | 'int' | 'void')
+type    : '_' ID BRACKETS?
         ;
 
-fixed   : 'fixed'
-        ;
-
-/* === LEXER === */
+visibility  : 'delicious'
+            | 'rare'
+            | 'common'
+            ;
 
 STRING  : '"' ('\\"'|.)*? '"'
         ;
 
-ID  : CHAR (CHAR | DIGIT)*
-    ;
+ID      : CHAR (CHAR | DIGIT)*
+        ;
 
-CHARSTRING  : CHAR+
-            ;
+CHARSTRING
+        : CHAR+
+        ;
 
 INTEGER : DIGIT+
         ;
 
-fragment
-CHAR  : [a-zA-Z]
-      ;
+BRAND   : CHARSTRING ('.' (CHARSTRING | '*'))*
+        ;
+
+WS      : [ \r\n\t] -> skip
+        ;
+
+COMMENT : '/*' ('\\"'|.)*? '*/' -> skip
+        ;
+
+IGNORE  : '<!--' ('\\"'|.)*? '--!>' -> channel(1)
+        ;
+
+TEXT    : [a-z]
+        ;
+
+BRACKETS
+        : '[]'
+        ;
 
 fragment
+CHAR    : [a-zA-Z]
+        ;
+
 DIGIT   : [0-9]
-      ;
-
-WS  : [ \r\n\t] -> skip
-    ;
+        ;

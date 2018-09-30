@@ -1,0 +1,23 @@
+buy(brand) ::= "import <brand>;"
+brand(brand) ::= "package <brand>;"
+
+bowl_enter(visibility, name) ::= "<visibility> class <name> {"
+bowl_exit() ::= "}"
+
+varDec(static, type, name) ::= "<if(static)>static<endif> <type> <name>"
+allocValue() ::= "="
+
+method_enter(visibility, static, return, name, params, construct) ::= "<visibility> <if(static)>static<endif> <if(construct)><else><return><endif> <name>(<params>) {"
+method_exit() ::= "}"
+
+return_enter() ::= "return "
+
+expr(expr) ::= "<expr>"
+method_call_enter(expr) ::= "<expr>("
+method_call_exit() ::= ")"
+
+createNew_enter(name) ::= "new <name>("
+createNew_exit() ::= ")"
+
+exit() ::= "}"
+colon() ::= ";"

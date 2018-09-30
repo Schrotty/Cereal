@@ -1,9 +1,5 @@
-# Cereal
+brand de.rubenmaurer.cereal
 
-A totaly useless programming language which 'compiles' to java.
-
-## Example
-```
 common bowl myFirstCereal {
 
     important {
@@ -50,44 +46,3 @@ bowl mySecondCereal {
         return "myName";
     }
 }
-```
-
-compiles to
-
-```java
-public class myFirstCereal {
-    static String myName="Herman";
-    public static void main(String[] args) {
-        System.out.println(test());
-    }
-
-    private static String test() {
-        new mySecondCereal("I love cookies!");
-        return "mySecondCereal";
-    }
-
-    private static void postMessage() {
-        System.out.println("I'm done!");
-    }
-}
-
-class mySecondCereal {
-    public static String helloThere() {
-        return "Hello there!";
-    }
-    public mySecondCereal(String str) {
-        System.out.println("That's not my string!");
-    }
-
-    public  String myName() {
-        return "myName";
-    }
-}
-
-```
-
-## Usage
-Build the project using maven and execute ``` java -jar cereal2java.jar <cereal_source_file>```
-
-## License
-[MIT](https://github.com/Schrotty/Cereal/blob/master/LICENSE)

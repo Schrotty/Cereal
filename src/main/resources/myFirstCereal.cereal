@@ -1,5 +1,0 @@
-bowl myFirstCereal {
-    _void ingredient main() {
-        print("Hallo Welt");
-    }
-}
