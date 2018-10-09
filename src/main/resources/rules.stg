@@ -14,6 +14,7 @@ return_enter() ::= "return "
 
 expr(expr) ::= "<expr>"
 method_call_enter(expr) ::= "<expr>("
+method_call_long_enter(id) ::= "<id>."
 method_call_exit() ::= ")"
 
 createNew_enter(name) ::= "new <name>("

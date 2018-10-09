@@ -15,6 +15,8 @@ class ExtractCerealListener extends de.rubenmaurer.lang.CerealBaseListener {
 
     private boolean important = false;
 
+    private boolean method = false;
+
     private int exprLevel = 0;
 
     private String contextName;
@@ -62,13 +64,15 @@ class ExtractCerealListener extends de.rubenmaurer.lang.CerealBaseListener {
 
     @Override
     public void enterVarDec(VarDecContext ctx) {
-        Template.get("varDec").single("static", important)
+        Template.get("varDec").single("static", !method && important)
                                 .single("type", ctx.type().ID().getText())
                                 .single("name", ctx.ID().getText()).print();
     }
 
     @Override
     public void enterMethod(MethodContext ctx) {
+        method = true;
+
         String vis = ctx.visibility() != null ? this.vis.getOrDefault(ctx.visibility().getText(), "") : "";
         String typ = ctx.type() != null ? ctx.type().ID().getText() : "void";
         String para;
@@ -119,6 +123,18 @@ class ExtractCerealListener extends de.rubenmaurer.lang.CerealBaseListener {
     public void exitMethodCall(MethodCallContext ctx) {
         Template.get("method_call_exit").print();
 
+        checkExprLevel();
+    }
+
+    @Override
+    public void enterLongMethodCall(LongMethodCallContext ctx) {
+        exprLevel++;
+
+        Template.get("method_call_long_enter").single("id", ctx.ID(0).getText()).print();
+    }
+
+    @Override
+    public void exitLongMethodCall(LongMethodCallContext ctx) {
         checkExprLevel();
     }
 

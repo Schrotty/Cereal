@@ -21,17 +21,18 @@ bowl    : visibility? 'bowl' ID block?
 method  : visibility? 'ingredient' ID '(' params? ')' ('=>' type)? block
         ;
 
-expr    : ID '(' exprList* ')'          # MethodCall
-        | 'add' ID '(' exprList* ')'    # CreateNewObj
-        | expr '*' expr                 # Multi
-        | expr '[' expr ']'             # ArrayAccess
-        | expr ('+' | '-') expr         # AddSub
-        | ID                            # id
-        | INTEGER                       # int
-        | '(' expr ')'                  # parens
-        | '(' exprList* ')'             # curlList
-        | STRING                        # string
-        | '<<' expr                     # allocValue
+expr    : ID '(' exprList* ')'              # MethodCall
+        | ID ('->' ID)* '->' expr           # LongMethodCall
+        | 'add' ID '(' exprList* ')'        # CreateNewObj
+        | expr '*' expr                     # Multi
+        | expr '[' expr ']'                 # ArrayAccess
+        | expr ('+' | '-') expr             # AddSub
+        | ID                                # id
+        | INTEGER                           # int
+        | '(' expr ')'                      # parens
+        | '(' exprList* ')'                 # curlList
+        | STRING                            # string
+        | '<<' expr                         # allocValue
         ;
 
 exprList: expr (',' expr)*
